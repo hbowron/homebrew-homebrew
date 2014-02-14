@@ -1,6 +1,6 @@
 require 'formula'
 
-class BrewGem < Formula
+class SportBrewGem < Formula
   homepage 'https://github.com/sportngin/brew-gem'
   url 'https://github.com/sportngin/brew-gem/archive/master.tar.gz'
 
