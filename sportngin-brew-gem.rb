@@ -2,8 +2,8 @@ require 'formula'
 
 class SportnginBrewGem < Formula
   homepage 'https://github.com/sportngin/brew-gem'
-  url 'https://github.com/sportngin/brew-gem/archive/v0.3.0.tar.gz'
-  sha1 '854a6a66a98eca4423afd27c4c2e92b197d894e2'
+  url 'https://github.com/sportngin/brew-gem/archive/v0.4.0.tar.gz'
+  sha1 'e99638d9d970df4ce669959b269055e75f348380'
 
   def install
     bin.install 'bin/brew-gem'
