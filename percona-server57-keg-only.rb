@@ -130,15 +130,6 @@ class PerconaServer57KegOnly < Formula
     end
 
     bin.install_symlink prefix/"support-files/mysql.server"
-
-    # mysqlaccess deprecated on 5.6.17, and removed in 5.7.4.
-    # See: https://bugs.mysql.com/bug.php?id=69012
-    if build.stable?
-      # Move mysqlaccess to libexec
-      libexec.mkpath
-      mv "#{bin}/mysqlaccess", libexec
-      mv "#{bin}/mysqlaccess.conf", libexec
-    end
   end
 
   def post_install
