@@ -2,26 +2,13 @@
 class PerconaServer57 < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/Percona-Server-5.6/Percona-Server-5.6.28-76.1/source/tarball/percona-server-5.6.28-76.1.tar.gz"
-  version "5.6.28-76.1"
-  sha256 "ab8ab794a58a82132645ae84b74de91c7f9a5bcf81f2162628ce8976a00a4fd4"
+  url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.11-4/source/tarball/percona-server-5.7.11-4.tar.gz"
+  version "5.7.11-4"
+  sha256 "3634d2262e646db11b03837561acb0e084f33e5a597957506cf4c333ea811921"
 
-  bottle do
-    revision 1
-    sha256 "b283468128a1450e20c73ceb16f5d6454a2cb834b5f7b889118456d6f9693af6" => :el_capitan
-    sha256 "56b11a60d823385bbe3f888d43d2780fbe7ae0ac96745ea624095480b96d0602" => :yosemite
-    sha256 "aa6efe7ebbcdfa1a26530300da885f56a33d3132f953886cdbe309fb545da6ec" => :mavericks
-  end
-
-  devel do
-    url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.10-2rc2/source/tarball/percona-server-5.7.10-2rc2.tar.gz"
-    version "5.7.10-2rc2"
-    sha256 "5f920eb8a80c4125f43ac084f51ddc7b004efb2b02a9d2d0ba76fb3c11889019"
-
-    resource "boost" do
-      url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
-      sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
-    end
+  resource "boost" do
+    url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
+    sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
   end
 
   option :universal
@@ -52,16 +39,8 @@ class PerconaServer57 < Formula
     cause "https://github.com/Homebrew/homebrew/issues/issue/144"
   end
 
-  # Where the database files should be located. Existing installs have them
-  # under var/percona, but going forward they will be under var/mysql to be
-  # shared with the mysql and mariadb formulae.
   def datadir
-    @datadir ||= (var/"percona").directory? ? var/"percona" : var/"mysql"
-  end
-
-  pour_bottle? do
-    reason "The bottle needs a var/mysql datadir (yours is var/percona)."
-    satisfy { datadir == var/"mysql" }
+    @datadir ||= var/"mysql57"
   end
 
   def install
@@ -105,13 +84,11 @@ class PerconaServer57 < Formula
     # https://bugs.launchpad.net/percona-server/+bug/1531446
     args.concat %W[-DWITHOUT_TOKUDB=1]
 
-    if build.devel?
-      # MySQL >5.7.x mandates Boost as a requirement to build & has a strict
-      # version check in place to ensure it only builds against expected release.
-      # This is problematic when Boost releases don't align with MySQL releases.
-      (buildpath/"boost_1_59_0").install resource("boost")
-      args << "-DWITH_BOOST=#{buildpath}/boost_1_59_0"
-    end
+    # MySQL >5.7.x mandates Boost as a requirement to build & has a strict
+    # version check in place to ensure it only builds against expected release.
+    # This is problematic when Boost releases don't align with MySQL releases.
+    (buildpath/"boost_1_59_0").install resource("boost")
+    args << "-DWITH_BOOST=#{buildpath}/boost_1_59_0"
 
     # To enable unit testing at build, we need to download the unit testing suite
     if build.with? "test"
