@@ -1,22 +1,31 @@
-require 'formula'
-
-class PerconaServer55KegOnly < Formula
-  homepage 'http://www.percona.com'
-  url 'http://www.percona.com/downloads/Percona-Server-5.5/Percona-Server-5.5.41-37.0/source/tarball/percona-server-5.5.41-37.0.tar.gz'
-  version '5.5.41-37.0'
-  sha1 '74610892ba6402e8df04320db444d6dcc7cb2fe8'
+class PerconaServer55 < Formula
+  desc "Drop-in MySQL replacement"
+  homepage "http://www.percona.com"
+  url "http://www.percona.com/downloads/Percona-Server-5.5/Percona-Server-5.5.41-37.0/source/tarball/percona-server-5.5.41-37.0.tar.gz"
+  version "5.5.41-37.0"
+  sha256 "4de65ccbdd6c266f18339c2ea5427a15d90a8ce1ce1c7574aa2e72f685a10833"
 
   keg_only 'To install multiple versions on one system.'
 
-  depends_on 'cmake' => :build
-  depends_on 'readline'
-  depends_on 'pidof'
+  bottle do
+    revision 1
+    sha256 "0485e4b85ec43cc8692a289005ea11437dd0b6f1de81ca5be4e5e889c774b8b1" => :el_capitan
+    sha256 "458885d3ae1d69671f3db47ba67e12345dc477fa133c12004dfedb6f906f8102" => :yosemite
+    sha256 "f3cc42afd6def0a236696d10366ab4f98f9894caefdc9538f21b9b0ef202b734" => :mavericks
+  end
 
   option :universal
-  option 'with-tests', 'Build with unit tests'
-  option 'with-embedded', 'Build the embedded server'
-  option 'with-libedit', 'Compile with editline wrapper instead of readline'
-  option 'enable-local-infile', 'Build with local infile loading support'
+  option "with-tests", "Build with unit tests"
+  option "with-embedded", "Build the embedded server"
+  option "with-libedit", "Compile with editline wrapper instead of readline"
+  option "with-local-infile", "Build with local infile loading support"
+
+  deprecated_option "enable-local-infile" => "with-local-infile"
+
+  depends_on "cmake" => :build
+  depends_on "readline"
+  depends_on "pidof"
+  depends_on "openssl"
 
   fails_with :llvm do
     build 2334
@@ -24,7 +33,7 @@ class PerconaServer55KegOnly < Formula
   end
 
   def destination
-    @destination ||= 'mysql55'
+    @destination ||= "mysql55"
   end
 
   def install
@@ -36,37 +45,37 @@ class PerconaServer55KegOnly < Formula
     (var/destination).mkpath
 
     args = [
-      ".",
-      "-DCMAKE_INSTALL_PREFIX=#{prefix}",
-      "-DMYSQL_DATADIR=#{var}/#{destination}",
-      "-DINSTALL_MANDIR=#{man}",
-      "-DINSTALL_DOCDIR=#{doc}",
-      "-DINSTALL_INFODIR=#{info}",
-      # CMake prepends prefix, so use share.basename
-      "-DINSTALL_MYSQLSHAREDIR=#{share.basename}/mysql",
-      "-DWITH_SSL=yes",
-      "-DDEFAULT_CHARSET=utf8",
-      "-DDEFAULT_COLLATION=utf8_general_ci",
-      "-DSYSCONFDIR=#{etc}",
-      "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-      # PAM plugin is Linux-only at the moment
-      "-DWITHOUT_AUTH_PAM=1",
-      "-DWITHOUT_AUTH_PAM_COMPAT=1",
-      "-DWITHOUT_DIALOG=1"
+        ".",
+        "-DCMAKE_INSTALL_PREFIX=#{prefix}",
+        "-DMYSQL_DATADIR=#{var}/#{destination}",
+        "-DINSTALL_MANDIR=#{man}",
+        "-DINSTALL_DOCDIR=#{doc}",
+        "-DINSTALL_INFODIR=#{info}",
+        # CMake prepends prefix, so use share.basename
+        "-DINSTALL_MYSQLSHAREDIR=#{share.basename}/mysql",
+        "-DWITH_SSL=yes",
+        "-DDEFAULT_CHARSET=utf8",
+        "-DDEFAULT_COLLATION=utf8_general_ci",
+        "-DSYSCONFDIR=#{etc}",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+        # PAM plugin is Linux-only at the moment
+        "-DWITHOUT_AUTH_PAM=1",
+        "-DWITHOUT_AUTH_PAM_COMPAT=1",
+        "-DWITHOUT_DIALOG=1",
     ]
 
     # To enable unit testing at build, we need to download the unit testing suite
-    if build.with? 'tests'
+    if build.with? "tests"
       args << "-DENABLE_DOWNLOADS=ON"
     else
       args << "-DWITH_UNIT_TESTS=OFF"
     end
 
     # Build the embedded server
-    args << "-DWITH_EMBEDDED_SERVER=ON" if build.with? 'embedded'
+    args << "-DWITH_EMBEDDED_SERVER=ON" if build.with? "embedded"
 
     # Compile with readline unless libedit is explicitly chosen
-    args << "-DWITH_READLINE=yes" if build.without? 'libedit'
+    args << "-DWITH_READLINE=yes" if build.without? "libedit"
 
     # Make universal for binding to universal applications
     if build.universal?
@@ -75,18 +84,18 @@ class PerconaServer55KegOnly < Formula
     end
 
     # Build with local infile loading support
-    args << "-DENABLED_LOCAL_INFILE=1" if build.include? 'enable-local-infile'
+    args << "-DENABLED_LOCAL_INFILE=1" if build.include? "enable-local-infile"
 
     system "cmake", *args
     system "make"
-    system "make install"
+    system "make", "install"
 
     # Don't create databases inside of the prefix!
     # See: https://github.com/mxcl/homebrew/issues/4975
-    rm_rf prefix+'data'
+    rm_rf prefix+"data"
 
     # Link the setup script into bin
-    ln_s prefix+'scripts/mysql_install_db', bin+'mysql_install_db'
+    ln_s prefix+"scripts/mysql_install_db", bin+"mysql_install_db"
 
     # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
@@ -96,6 +105,7 @@ class PerconaServer55KegOnly < Formula
     ln_s "#{prefix}/support-files/mysql.server", bin
 
     # Move mysqlaccess to libexec
+    libexec.mkpath
     mv "#{bin}/mysqlaccess", libexec
     mv "#{bin}/mysqlaccess.conf", libexec
   end
@@ -121,10 +131,10 @@ class PerconaServer55KegOnly < Formula
 
     To connect:
         mysql -uroot
-    EOS
+  EOS
   end
 
-  plist_options :manual => 'mysql.server start'
+  plist_options :manual => "mysql.server start"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
@@ -143,6 +153,6 @@ class PerconaServer55KegOnly < Formula
       <string>#{var}</string>
     </dict>
     </plist>
-    EOS
+  EOS
   end
 end
