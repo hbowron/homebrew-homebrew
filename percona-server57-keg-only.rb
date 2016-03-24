@@ -1,10 +1,12 @@
 # From https://github.com/Homebrew/homebrew/blob/65ff734263e0599fc6f194a22162d4b6b1cba395/Library/Formula/percona-server.rb
-class PerconaServer57 < Formula
+class PerconaServer57KegOnly < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
   url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.11-4/source/tarball/percona-server-5.7.11-4.tar.gz"
   version "5.7.11-4"
   sha256 "3634d2262e646db11b03837561acb0e084f33e5a597957506cf4c333ea811921"
+
+  keg_only 'To install multiple versions on one system.'
 
   resource "boost" do
     url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
@@ -26,9 +28,6 @@ class PerconaServer57 < Formula
 
   conflicts_with "mysql-connector-c",
                  :because => "both install `mysql_config`"
-
-  conflicts_with "mariadb", "mysql", "mysql-cluster", "percona-server", "percona-server55",
-                 :because => "percona, mariadb, and mysql install the same binaries."
   conflicts_with "mysql-connector-c",
                  :because => "both install MySQL client libraries"
   conflicts_with "mariadb-connector-c",
@@ -39,11 +38,8 @@ class PerconaServer57 < Formula
     cause "https://github.com/Homebrew/homebrew/issues/issue/144"
   end
 
-  # Where the database files should be located. Existing installs have them
-  # under var/percona, but going forward they will be under var/mysql to be
-  # shared with the mysql and mariadb formulae.
   def datadir
-    @datadir ||= (var/"percona").directory? ? var/"percona" : var/"mysql"
+    @datadir ||= var/"mysql57"
   end
 
   def install

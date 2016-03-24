@@ -1,10 +1,12 @@
 require 'formula'
 
-class PerconaServer55 < Formula
+class PerconaServer55KegOnly < Formula
   homepage 'http://www.percona.com'
   url 'http://www.percona.com/downloads/Percona-Server-5.5/Percona-Server-5.5.41-37.0/source/tarball/percona-server-5.5.41-37.0.tar.gz'
   version '5.5.41-37.0'
   sha1 '74610892ba6402e8df04320db444d6dcc7cb2fe8'
+
+  keg_only 'To install multiple versions on one system.'
 
   depends_on 'cmake' => :build
   depends_on 'readline'
@@ -16,28 +18,13 @@ class PerconaServer55 < Formula
   option 'with-libedit', 'Compile with editline wrapper instead of readline'
   option 'enable-local-infile', 'Build with local infile loading support'
 
-  conflicts_with 'mysql',
-    :because => "percona-server55 and mysql install the same binaries."
-
-  conflicts_with 'mariadb',
-    :because => "percona-server55 and mariadb install the same binaries."
-
-  conflicts_with 'mysql-cluster',
-    :because => "percona-server55 and mysql-cluster install the same binaries."
-
-  conflicts_with 'percona-server', 'percona-server57',
-    :because => "percona-server55, percona-server57 and percona-server install the same binaries."
-
   fails_with :llvm do
     build 2334
     cause "https://github.com/mxcl/homebrew/issues/issue/144"
   end
 
-  # Where the database files should be located. Existing installs have them
-  # under var/percona, but going forward they will be under var/msyql to be
-  # shared with the mysql and mariadb formulae.
   def destination
-    @destination ||= (var/'percona').directory? ? 'percona' : 'mysql'
+    @destination ||= 'mysql55'
   end
 
   def install
