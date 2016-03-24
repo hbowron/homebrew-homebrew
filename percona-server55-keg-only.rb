@@ -1,4 +1,4 @@
-class PerconaServer55 < Formula
+class PerconaServer55KegOnly < Formula
   desc "Drop-in MySQL replacement"
   homepage "http://www.percona.com"
   url "http://www.percona.com/downloads/Percona-Server-5.5/Percona-Server-5.5.41-37.0/source/tarball/percona-server-5.5.41-37.0.tar.gz"
