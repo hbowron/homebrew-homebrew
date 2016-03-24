@@ -11,6 +11,11 @@ class PerconaServer57 < Formula
     sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
   end
 
+  bottle do
+    root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles/"
+    sha256 "f44cac3cb504ead158ca3e9f62042d8356cd1916d8449d106257c65da6a3a341" => :el_capitan
+  end
+
   option :universal
   option "with-test", "Build with unit tests"
   option "with-embedded", "Build the embedded server"
