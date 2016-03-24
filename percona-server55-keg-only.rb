@@ -8,10 +8,8 @@ class PerconaServer55KegOnly < Formula
   keg_only 'To install multiple versions on one system.'
 
   bottle do
-    revision 1
-    sha256 "0485e4b85ec43cc8692a289005ea11437dd0b6f1de81ca5be4e5e889c774b8b1" => :el_capitan
-    sha256 "458885d3ae1d69671f3db47ba67e12345dc477fa133c12004dfedb6f906f8102" => :yosemite
-    sha256 "f3cc42afd6def0a236696d10366ab4f98f9894caefdc9538f21b9b0ef202b734" => :mavericks
+    root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
+    sha256 "096d80f15ddf9bae103a9457ed9d8cb65e3d9176058cdfad355855fd7eda338f" => :el_capitan
   end
 
   option :universal
