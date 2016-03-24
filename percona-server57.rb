@@ -39,8 +39,11 @@ class PerconaServer57 < Formula
     cause "https://github.com/Homebrew/homebrew/issues/issue/144"
   end
 
+  # Where the database files should be located. Existing installs have them
+  # under var/percona, but going forward they will be under var/mysql to be
+  # shared with the mysql and mariadb formulae.
   def datadir
-    @datadir ||= var/"mysql57"
+    @datadir ||= (var/"percona").directory? ? var/"percona" : var/"mysql"
   end
 
   def install
