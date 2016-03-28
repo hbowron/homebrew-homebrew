@@ -134,7 +134,7 @@ class PerconaServer55 < Formula
   EOS
   end
 
-  plist_options :manual => "#{opt_bin}/mysql.server start"
+  plist_options :manual => "/usr/local/opt/percona-server55/bin/mysql.server start"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
