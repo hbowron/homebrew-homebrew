@@ -111,7 +111,7 @@ class PerconaServer55KegOnly < Formula
   def caveats; <<-EOS.undent
     Set up databases to run AS YOUR USER ACCOUNT with:
         unset TMPDIR
-        mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix percona-server55)" --datadir=#{var}/#{destination} --tmpdir=/tmp
+        mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix percona-server55-keg-only)" --datadir=#{var}/#{destination} --tmpdir=/tmp
 
     To set up base tables in another folder, or use a different user to run
     mysqld, view the help for mysqld_install_db:
@@ -132,7 +132,7 @@ class PerconaServer55KegOnly < Formula
   EOS
   end
 
-  plist_options :manual => "mysql.server start"
+  plist_options :manual => "#{opt_bin}/mysql.server start"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>

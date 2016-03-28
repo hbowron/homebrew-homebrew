@@ -156,7 +156,7 @@ class PerconaServer57KegOnly < Formula
   EOS
   end
 
-  plist_options :manual => "mysql.server start"
+  plist_options :manual => "#{opt_bin}/mysql.server start"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
