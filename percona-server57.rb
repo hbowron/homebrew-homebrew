@@ -11,13 +11,13 @@ class PerconaServer57 < Formula
 
   resource "boost" do
     url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
-    sha256 "8598ac79a071c423130b99a9793dd67bab7b9d373c9697ae72c8a98449ef4273"
+    sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
   end
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
     revision 1
-    sha256 "c395062a832012b1c0aea7cbf922f0d3d3cd40f3f2b01de5e829a05b4f321871" => :el_capitan
+    sha256 "8598ac79a071c423130b99a9793dd67bab7b9d373c9697ae72c8a98449ef4273" => :el_capitan
   end
 
   option :universal
