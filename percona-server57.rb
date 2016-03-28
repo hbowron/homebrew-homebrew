@@ -1,10 +1,13 @@
-# From https://github.com/Homebrew/homebrew/blob/65ff734263e0599fc6f194a22162d4b6b1cba395/Library/Formula/percona-server.rb
+# Fork of https://github.com/Homebrew/homebrew/blob/65ff734263e0599fc6f194a22162d4b6b1cba395/Library/Formula/percona-server.rb
 class PerconaServer57 < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
   url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.11-4/source/tarball/percona-server-5.7.11-4.tar.gz"
   version "5.7.11-4"
   sha256 "3634d2262e646db11b03837561acb0e084f33e5a597957506cf4c333ea811921"
+
+  # https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/
+  keg_only 'To install multiple versions on one system.'
 
   resource "boost" do
     url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
@@ -13,7 +16,7 @@ class PerconaServer57 < Formula
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    sha256 "f44cac3cb504ead158ca3e9f62042d8356cd1916d8449d106257c65da6a3a341" => :el_capitan
+    sha256 "c395062a832012b1c0aea7cbf922f0d3d3cd40f3f2b01de5e829a05b4f321871" => :el_capitan
   end
 
   option :universal
@@ -29,27 +32,13 @@ class PerconaServer57 < Formula
   depends_on "pidof" unless MacOS.version >= :mountain_lion
   depends_on "openssl"
 
-  conflicts_with "mysql-connector-c",
-                 :because => "both install `mysql_config`"
-
-  conflicts_with "mariadb", "mysql", "mysql-cluster", "percona-server", "percona-server55",
-                 "homebrew/versions/percona-server55", "sportngin/homebrew/percona-server55",
-                 :because => "percona, mariadb, and mysql install the same binaries."
-  conflicts_with "mysql-connector-c",
-                 :because => "both install MySQL client libraries"
-  conflicts_with "mariadb-connector-c",
-                 :because => "both install plugins"
-
   fails_with :llvm do
     build 2334
     cause "https://github.com/Homebrew/homebrew/issues/issue/144"
   end
 
-  # Where the database files should be located. Existing installs have them
-  # under var/percona, but going forward they will be under var/mysql to be
-  # shared with the mysql and mariadb formulae.
   def datadir
-    @datadir ||= (var/"percona").directory? ? var/"percona" : var/"mysql"
+    @datadir ||= var/"mysql57"
   end
 
   def install
@@ -161,7 +150,7 @@ class PerconaServer57 < Formula
   EOS
   end
 
-  plist_options :manual => "mysql.server start"
+  plist_options :manual => "#{opt_bin}/mysql.server start"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>

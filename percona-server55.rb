@@ -1,10 +1,12 @@
-class PerconaServer55KegOnly < Formula
+# Fork of https://github.com/Homebrew/homebrew-versions/blob/f25a3ea77e82b1ae52d651c1e94aaa3b5a0b3b72/percona-server55.rb
+class PerconaServer55 < Formula
   desc "Drop-in MySQL replacement"
   homepage "http://www.percona.com"
   url "http://www.percona.com/downloads/Percona-Server-5.5/Percona-Server-5.5.41-37.0/source/tarball/percona-server-5.5.41-37.0.tar.gz"
   version "5.5.41-37.0"
   sha256 "4de65ccbdd6c266f18339c2ea5427a15d90a8ce1ce1c7574aa2e72f685a10833"
 
+  # https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/
   keg_only 'To install multiple versions on one system.'
 
   bottle do
@@ -111,7 +113,7 @@ class PerconaServer55KegOnly < Formula
   def caveats; <<-EOS.undent
     Set up databases to run AS YOUR USER ACCOUNT with:
         unset TMPDIR
-        mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix percona-server55-keg-only)" --datadir=#{var}/#{destination} --tmpdir=/tmp
+        mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix percona-server55)" --datadir=#{var}/#{destination} --tmpdir=/tmp
 
     To set up base tables in another folder, or use a different user to run
     mysqld, view the help for mysqld_install_db:
