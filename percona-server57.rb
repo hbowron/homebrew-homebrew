@@ -1,23 +1,16 @@
-# Fork of https://github.com/Homebrew/homebrew/blob/65ff734263e0599fc6f194a22162d4b6b1cba395/Library/Formula/percona-server.rb
+# Fork of https://github.com/Homebrew/homebrew/blob/fe554ca165362b4dc697af9700058396da6385e0/Library/Formula/percona-server.rb
 class PerconaServer57 < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
   url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.11-4/source/tarball/percona-server-5.7.11-4.tar.gz"
-  version "5.7.11-4"
   sha256 "3634d2262e646db11b03837561acb0e084f33e5a597957506cf4c333ea811921"
 
-  # https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/
-  keg_only 'To install multiple versions on one system.'
-
-  resource "boost" do
-    url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
-    sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
-  end
+  keg_only 'Keg only with versioned data directory to allow multiple versions on one system.  See: https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/'
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    revision 1
-    sha256 "8598ac79a071c423130b99a9793dd67bab7b9d373c9697ae72c8a98449ef4273" => :el_capitan
+    revision 2
+    sha256 "481b8210b1bf4700d8bb30cb43352abebd3042a4a30bfea8c4907c73dc97acdc" => :el_capitan
   end
 
   option :universal
@@ -38,6 +31,14 @@ class PerconaServer57 < Formula
     cause "https://github.com/Homebrew/homebrew/issues/issue/144"
   end
 
+  resource "boost" do
+    url "https://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2"
+    sha256 "727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca"
+  end
+
+  # Where the database files should be located. Existing installs have them
+  # under var/percona, but going forward they will be under var/mysql to be
+  # shared with the mysql and mariadb formulae.
   def datadir
     @datadir ||= var/"mysql57"
   end
@@ -119,9 +120,6 @@ class PerconaServer57 < Formula
     # See: https://github.com/Homebrew/homebrew/issues/4975
     rm_rf prefix+"data"
 
-    # Link the setup script into bin
-    bin.install_symlink prefix/"scripts/mysql_install_db"
-
     # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
       s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
@@ -132,44 +130,37 @@ class PerconaServer57 < Formula
     bin.install_symlink prefix/"support-files/mysql.server"
   end
 
-  def post_install
-    # Make sure that data directory exists
-    datadir.mkpath
-    unless File.exist? "#{datadir}/mysql/user.frm"
-      ENV["TMPDIR"] = nil
-      system "#{bin}/mysql_install_db", "--verbose", "--user=#{ENV["USER"]}",
-             "--basedir=#{prefix}", "--datadir=#{datadir}", "--tmpdir=/tmp"
-    end
-  end
-
   def caveats; <<-EOS.undent
-    A "/etc/my.cnf" from another install may interfere with a Homebrew-built
-    server starting up correctly.
+  A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+  server starting up correctly.
 
-    To connect:
-        mysql -uroot
+  To connect:
+      mysql -uroot
+
+  To initialize the data directory:
+      mysqld --initialize --datadir=#{datadir} --user=#{ENV["USER"]}
   EOS
   end
 
   plist_options :manual => "/usr/local/opt/percona-server57/bin/mysql.server start"
 
   def plist; <<-EOS.undent
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>KeepAlive</key>
-      <true/>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>Program</key>
-      <string>#{opt_bin}/mysqld_safe</string>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>WorkingDirectory</key>
-      <string>#{var}</string>
-    </dict>
-    </plist>
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+  <dict>
+    <key>KeepAlive</key>
+    <true/>
+    <key>Label</key>
+    <string>#{plist_name}</string>
+    <key>Program</key>
+    <string>#{opt_bin}/mysqld_safe</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>WorkingDirectory</key>
+    <string>#{var}</string>
+  </dict>
+  </plist>
   EOS
   end
 end
