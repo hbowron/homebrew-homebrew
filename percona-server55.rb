@@ -133,8 +133,6 @@ class PerconaServer55 < Formula
   EOS
   end
 
-  plist_options :manual => "/usr/local/opt/percona-server55/bin/mysql.server start"
-
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -144,8 +142,16 @@ class PerconaServer55 < Formula
       <true/>
       <key>Label</key>
       <string>#{plist_name}</string>
-      <key>Program</key>
-      <string>#{opt_prefix}/bin/mysqld_safe</string>
+      <key>ProgramArguments</key>
+      <array>
+        <string>#{opt_bin}/mysqld_safe</string>
+        <string>--user=#{ENV["USER"]}</string>
+        <string>--port=3306</string>
+        <string>--basedir=#{opt_prefix}</string>
+        <string>--datadir=#{datadir}</string>
+        <string>--pid-file=#{datadir}/mysqld55.pid</string>
+        <string>--socket=#{datadir}/mysqld55.sock</string>
+      </array>
       <key>RunAtLoad</key>
       <true/>
       <key>WorkingDirectory</key>
