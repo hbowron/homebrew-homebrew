@@ -1,15 +1,17 @@
-class PerconaServer55KegOnly < Formula
+# Fork of https://github.com/Homebrew/homebrew-versions/blob/f25a3ea77e82b1ae52d651c1e94aaa3b5a0b3b72/percona-server55.rb
+class PerconaServer55 < Formula
   desc "Drop-in MySQL replacement"
   homepage "http://www.percona.com"
   url "http://www.percona.com/downloads/Percona-Server-5.5/Percona-Server-5.5.41-37.0/source/tarball/percona-server-5.5.41-37.0.tar.gz"
   version "5.5.41-37.0"
   sha256 "4de65ccbdd6c266f18339c2ea5427a15d90a8ce1ce1c7574aa2e72f685a10833"
 
+  # https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/
   keg_only 'To install multiple versions on one system.'
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    sha256 "096d80f15ddf9bae103a9457ed9d8cb65e3d9176058cdfad355855fd7eda338f" => :el_capitan
+    sha256 "1202b15ad2add10daee1b22cd92af0fb0e27847d965641cf5c156a5d343519a5" => :el_capitan
   end
 
   option :universal
@@ -132,7 +134,7 @@ class PerconaServer55KegOnly < Formula
   EOS
   end
 
-  plist_options :manual => "mysql.server start"
+  plist_options :manual => "/usr/local/opt/percona-server55/bin/mysql.server start"
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
