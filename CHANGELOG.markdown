@@ -1,3 +1,8 @@
+#### 2016.03.29.15.09
+* Update launchd configs
+
+  > Brian Bergstrom: : https://github.com/sportngin/homebrew-homebrew/pull/5
+
 #### 2016.03.29.11.38
 * Patching percona-server57 post install
 
