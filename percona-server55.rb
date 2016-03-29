@@ -148,9 +148,9 @@ class PerconaServer55 < Formula
         <string>--user=#{ENV["USER"]}</string>
         <string>--port=3306</string>
         <string>--basedir=#{opt_prefix}</string>
-        <string>--datadir=#{datadir}</string>
-        <string>--pid-file=#{datadir}/mysqld55.pid</string>
-        <string>--socket=#{datadir}/mysqld55.sock</string>
+        <string>--datadir=#{var}/#{destination}</string>
+        <string>--pid-file=#{var}/#{destination}/mysqld55.pid</string>
+        <string>--socket=#{var}/#{destination}/mysqld55.sock</string>
       </array>
       <key>RunAtLoad</key>
       <true/>
