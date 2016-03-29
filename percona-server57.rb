@@ -155,7 +155,7 @@ class PerconaServer57 < Formula
     <array>
       <string>#{opt_bin}/mysqld_safe</string>
       <string>--user=#{ENV["USER"]}</string>
-      <string>--port=3307</string>
+      <string>--port=33306</string>
       <string>--basedir=#{opt_prefix}</string>
       <string>--datadir=#{datadir}</string>
       <string>--pid-file=#{datadir}/mysqld57.pid</string>
