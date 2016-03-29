@@ -1,3 +1,8 @@
+#### 2016.03.29.15.22
+* Fix port
+
+  > Brian Bergstrom: Andy Fleener: https://github.com/sportngin/homebrew-homebrew/pull/6
+
 #### 2016.03.29.15.09
 * Update launchd configs
 
