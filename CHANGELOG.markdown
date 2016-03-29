@@ -1,3 +1,8 @@
+#### 2016.03.29.11.38
+* Patching percona-server57 post install
+
+  > Brian Bergstrom: Andy Fleener: https://github.com/sportngin/homebrew-homebrew/pull/4
+
 #### 2016.03.28.15.35
 * Patch and simplify percona-server formulae
 
