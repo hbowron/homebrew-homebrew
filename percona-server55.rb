@@ -6,8 +6,7 @@ class PerconaServer55 < Formula
   version "5.5.41-37.0"
   sha256 "4de65ccbdd6c266f18339c2ea5427a15d90a8ce1ce1c7574aa2e72f685a10833"
 
-  # https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/
-  keg_only 'To install multiple versions on one system.'
+  keg_only 'Keg only with versioned data directory to allow multiple versions on one system.  See: https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/'
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
