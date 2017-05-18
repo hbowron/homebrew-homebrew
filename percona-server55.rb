@@ -11,7 +11,7 @@ class PerconaServer55 < Formula
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
     rebuild 1
-    # sha256 "1202b15ad2add10daee1b22cd92af0fb0e27847d965641cf5c156a5d343519a5" => :el_capitan
+    sha256 "86938a33e57aff0aa08d65ecfd86a8e726c0d89bedddb37d307485b47c9ea93c" => :el_capitan
     sha256 "5aff4291cd37abe768efcbc4857bf3d0117aafd0e878251e4aef12a3d63eab89" => :sierra
   end
 
