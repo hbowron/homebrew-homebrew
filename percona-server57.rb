@@ -2,15 +2,15 @@
 class PerconaServer57 < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.11-4/source/tarball/percona-server-5.7.11-4.tar.gz"
-  sha256 "3634d2262e646db11b03837561acb0e084f33e5a597957506cf4c333ea811921"
+  url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.18-14/source/tarball/percona-server-5.7.18-14.tar.gz"
+  sha256 "4c617e2f9a1c601caebb5ff470c675e3d03ba3b8071cd3261ae24fe11671e3bd"
 
   keg_only 'Keg only with versioned data directory to allow multiple versions on one system.  See: https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/'
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    revision 2
-    sha256 "481b8210b1bf4700d8bb30cb43352abebd3042a4a30bfea8c4907c73dc97acdc" => :el_capitan
+    sha256 "d3c3af5b90b3c4dc4d6a97e0caa8e452f3bc05bb3245eccdd36378eebed59698" => :el_capitan
+    sha256 "51d228bbe6d205cd9b4d1110af297016290ef893b90b3bd044b8efaab7a1645c" => :sierra
   end
 
   option :universal
@@ -49,10 +49,6 @@ class PerconaServer57 < Formula
     inreplace "cmake/libutils.cmake",
               "COMMAND /usr/bin/libtool -static -o ${TARGET_LOCATION}",
               "COMMAND libtool -static -o ${TARGET_LOCATION}"
-
-    # Build without compiler or CPU specific optimization flags to facilitate
-    # compilation of gems and other software that queries `mysql-config`.
-    ENV.minimal_optimization
 
     args = %W[
       -DCMAKE_INSTALL_PREFIX=#{prefix}
@@ -123,8 +119,6 @@ class PerconaServer57 < Formula
     # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
       s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
-      # pidof can be replaced with pgrep from proctools on Mountain Lion
-      s.gsub!(/pidof/, "pgrep") if MacOS.version >= :mountain_lion
     end
 
     bin.install_symlink prefix/"support-files/mysql.server"
