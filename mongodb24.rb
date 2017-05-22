@@ -4,10 +4,11 @@ class Mongodb24 < Formula
   sha256 "b239a065a1197f811a3908bdee8d535564b94f2d79da893935e38831ebbac8b3"
 
   bottle do
-    cellar :any
-    sha256 "004b4e3bfdb5ee0c00b5568383b5012059d057cc30248f5604afd34fd3cb8382" => :yosemite
-    sha256 "c6310fd5ea6f665c1d6aec573024b729c912865fcad25ce6723a293bcde82db7" => :mavericks
-    sha256 "d3d6d653817a8e6127d9efa62d0f7338c67d15217acb323b5ad49ae853a719da" => :mountain_lion
+    root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
+    cellar :any_skip_relocation
+    rebuild 1
+    sha256 "b83a20e8e440726fc0798d24d17a3781b811e959239d19d5ef0ee22aba7f5b83" => :el_capitan
+    sha256 "4e6dbc25e9cb2a82d1047b4cc96314a3afe1afc6fb2f4d5f464201661419d644" => :sierra
   end
 
   patch do
