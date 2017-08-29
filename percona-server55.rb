@@ -28,11 +28,6 @@ class PerconaServer55 < Formula
   depends_on "pidof"
   depends_on "openssl"
 
-  fails_with :llvm do
-    build 2334
-    cause "https://github.com/mxcl/homebrew/issues/issue/144"
-  end
-
   def destination
     @destination ||= "mysql55"
   end
