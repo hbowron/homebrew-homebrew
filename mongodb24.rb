@@ -13,7 +13,12 @@ class Mongodb24 < Formula
 
   patch do
     url "https://github.com/mongodb/mongo/commit/be4bc7.diff"
-    sha256 "63592bb33dbe1662425a4a323a6ad33a6aa25d8e3c28b2bc48e34df57361eeed"
+    sha256 "92a395063451cb1fbdc13c0fe7db5c92704f8a5ac5810f5dad765d14831226ea"
+  end
+
+  patch do
+    url "https://raw.githubusercontent.com/sportngin/homebrew-homebrew/e191342/patches/mongo-2.4.12-pointer-comparison.patch"
+    sha256 ""
   end
 
   depends_on "scons" => :build
