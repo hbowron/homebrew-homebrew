@@ -1,0 +1,25 @@
+diff --git a/src/mongo/db/client.h b/src/mongo/db/client.h
+index 67063ddb14..b997553955 100644
+--- a/src/mongo/db/client.h
++++ b/src/mongo/db/client.h
+@@ -243,6 +243,6 @@ namespace mongo {
+     inline Client::GodScope::~GodScope() { cc()._god = _prev; }
+ 
+ 
+-    inline bool haveClient() { return currentClient.get() > 0; }
++    inline bool haveClient() { return currentClient.get() > (void*) 0; }
+ 
+ };
+diff --git a/src/mongo/db/namespace.h b/src/mongo/db/namespace.h
+index 9d011f684e..4aa1766e81 100644
+--- a/src/mongo/db/namespace.h
++++ b/src/mongo/db/namespace.h
+@@ -31,7 +31,7 @@ namespace mongo {
+         Namespace(const StringData& ns) { *this = ns; }
+         Namespace& operator=(const StringData& ns);
+ 
+-        bool hasDollarSign() const { return strchr( buf , '$' ) > 0;  }
++        bool hasDollarSign() const { return strchr( buf , '$' ) > (void*) 0;  }
+         void kill() { buf[0] = 0x7f; }
+         bool operator==(const char *r) const { return strcmp(buf, r) == 0; }
+         bool operator==(const Namespace& r) const { return strcmp(buf, r.buf) == 0; }
