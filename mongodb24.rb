@@ -9,6 +9,7 @@ class Mongodb24 < Formula
     rebuild 1
     sha256 "b83a20e8e440726fc0798d24d17a3781b811e959239d19d5ef0ee22aba7f5b83" => :el_capitan
     sha256 "4e6dbc25e9cb2a82d1047b4cc96314a3afe1afc6fb2f4d5f464201661419d644" => :sierra
+    sha256 "4b1d38da7eeb3ecfa7e2b5225fbe86c28f71285b33eb763d2ea4e7f49d9d5e42" => :high_sierra
   end
 
   patch do
@@ -18,7 +19,7 @@ class Mongodb24 < Formula
 
   patch do
     url "https://raw.githubusercontent.com/sportngin/homebrew-homebrew/e191342/patches/mongo-2.4.12-pointer-comparison.patch"
-    sha256 ""
+    sha256 "42df26a8fd73db69b68b83300baa2a33722e2b87732714b06d4ef7bee68fa08e"
   end
 
   depends_on "scons" => :build
