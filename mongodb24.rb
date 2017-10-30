@@ -8,8 +8,7 @@ class Mongodb24 < Formula
     cellar :any_skip_relocation
     rebuild 1
     sha256 "4e6dbc25e9cb2a82d1047b4cc96314a3afe1afc6fb2f4d5f464201661419d644" => :sierra
-    sha256 "b83a20e8e440726fc0798d24d17a3781b811e959239d19d5ef0ee22aba7f5b83" => :el_capitan
-    sha256 "4b1d38da7eeb3ecfa7e2b5225fbe86c28f71285b33eb763d2ea4e7f49d9d5e42" => :high_sierra
+    sha256 "e82a70cf9925692bc302f7e534c896f1b14d38e588ea75b455be73c6bdecd432" => :high_sierra
   end
 
   patch do
