@@ -102,7 +102,7 @@ class PerconaServer55 < Formula
     mv "#{bin}/mysqlaccess.conf", libexec
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
     Set up databases to run AS YOUR USER ACCOUNT with:
         unset TMPDIR
         mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix percona-server55)" --datadir=#{var}/#{destination} --tmpdir=/tmp
@@ -126,7 +126,7 @@ class PerconaServer55 < Formula
   EOS
   end
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">

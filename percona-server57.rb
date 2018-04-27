@@ -119,7 +119,7 @@ class PerconaServer57 < Formula
     bin.install_symlink prefix/"support-files/mysql.server"
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<~EOS
   A "/etc/my.cnf" from another install may interfere with a Homebrew-built
   server starting up correctly.
 
@@ -131,7 +131,7 @@ class PerconaServer57 < Formula
   EOS
   end
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
   <?xml version="1.0" encoding="UTF-8"?>
   <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
   <plist version="1.0">
