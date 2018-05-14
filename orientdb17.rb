@@ -21,7 +21,7 @@ class Orientdb17 < Formula
     libexec.install Dir["*"]
 
     inreplace "#{libexec}/config/orientdb-server-config.xml", "</properties>",
-       <<-EOS.undent
+       <<~EOS
          <entry name="server.database.path" value="#{var}/db/orientdb" />
          </properties>
        EOS
