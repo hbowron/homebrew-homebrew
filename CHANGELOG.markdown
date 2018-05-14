@@ -1,3 +1,8 @@
+#### 2018.05.14.11.41
+* Mongo24 high sierra build and bottle
+
+  > Nick Sieger: : https://github.com/sportngin/homebrew-homebrew/pull/13
+
 #### 2018.05.14.11.40
 #### 2017.05.22.13.40
 * Percona/Mongo updates and bottles
