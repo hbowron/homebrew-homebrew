@@ -7,13 +7,18 @@ class Mongodb24 < Formula
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
     cellar :any_skip_relocation
     rebuild 1
-    sha256 "b83a20e8e440726fc0798d24d17a3781b811e959239d19d5ef0ee22aba7f5b83" => :el_capitan
     sha256 "4e6dbc25e9cb2a82d1047b4cc96314a3afe1afc6fb2f4d5f464201661419d644" => :sierra
+    sha256 "e82a70cf9925692bc302f7e534c896f1b14d38e588ea75b455be73c6bdecd432" => :high_sierra
   end
 
   patch do
     url "https://github.com/mongodb/mongo/commit/be4bc7.diff"
-    sha256 "63592bb33dbe1662425a4a323a6ad33a6aa25d8e3c28b2bc48e34df57361eeed"
+    sha256 "92a395063451cb1fbdc13c0fe7db5c92704f8a5ac5810f5dad765d14831226ea"
+  end
+
+  patch do
+    url "https://raw.githubusercontent.com/sportngin/homebrew-homebrew/e191342/patches/mongo-2.4.12-pointer-comparison.patch"
+    sha256 "42df26a8fd73db69b68b83300baa2a33722e2b87732714b06d4ef7bee68fa08e"
   end
 
   depends_on "scons" => :build
