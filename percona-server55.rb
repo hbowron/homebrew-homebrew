@@ -46,7 +46,7 @@ class PerconaServer55 < Formula
         # CMake prepends prefix, so use share.basename
         "-DINSTALL_MYSQLSHAREDIR=#{share.basename}/mysql",
         "-DWITH_SSL=yes",
-        "-DOPENSSL_ROOT_DIR=#{prefix}/opt/openssl",
+        "-DOPENSSL_ROOT_DIR=#{HOMEBREW_PREFIX}/opt/openssl",
         "-DDEFAULT_CHARSET=utf8",
         "-DDEFAULT_COLLATION=utf8_general_ci",
         "-DSYSCONFDIR=#{etc}",
