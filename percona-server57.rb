@@ -2,15 +2,14 @@
 class PerconaServer57 < Formula
   desc "Drop-in MySQL replacement"
   homepage "https://www.percona.com"
-  url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.18-14/source/tarball/percona-server-5.7.18-14.tar.gz"
-  sha256 "4c617e2f9a1c601caebb5ff470c675e3d03ba3b8071cd3261ae24fe11671e3bd"
+  url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.25-28/source/tarball/percona-server-5.7.25-28.tar.gz"
+  sha256 "382c610803a9d8e3b54d16a9fd0bd70584116a831f4f3208b58f4cd5efa5cae3"
 
   keg_only 'Keg only with versioned data directory to allow multiple versions on one system.  See: https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/'
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    sha256 "d3c3af5b90b3c4dc4d6a97e0caa8e452f3bc05bb3245eccdd36378eebed59698" => :el_capitan
-    sha256 "51d228bbe6d205cd9b4d1110af297016290ef893b90b3bd044b8efaab7a1645c" => :sierra
+    sha256 "d3e6e76ed4ad2cea38a4f26e44eb2d3ef86718223c15fd9d987f33f9989f2b62" => :mojave
   end
 
   option :universal
@@ -39,12 +38,6 @@ class PerconaServer57 < Formula
   end
 
   def install
-    # Don't hard-code the libtool path. See:
-    # https://github.com/Homebrew/homebrew/issues/20185
-    inreplace "cmake/libutils.cmake",
-              "COMMAND /usr/bin/libtool -static -o ${TARGET_LOCATION}",
-              "COMMAND libtool -static -o ${TARGET_LOCATION}"
-
     args = %W[
       -DCMAKE_INSTALL_PREFIX=#{prefix}
       -DCMAKE_FIND_FRAMEWORK=LAST
@@ -55,7 +48,7 @@ class PerconaServer57 < Formula
       -DINSTALL_DOCDIR=share/doc/#{name}
       -DINSTALL_INFODIR=share/info
       -DINSTALL_MYSQLSHAREDIR=share/mysql
-      -DWITH_SSL=yes
+      -DWITH_SSL=bundled
       -DDEFAULT_CHARSET=utf8
       -DDEFAULT_COLLATION=utf8_general_ci
       -DSYSCONFDIR=#{etc}
@@ -74,6 +67,10 @@ class PerconaServer57 < Formula
     # TokuDB is broken on MacOsX
     # https://bugs.launchpad.net/percona-server/+bug/1531446
     args.concat %W[-DWITHOUT_TOKUDB=1]
+
+    # MyRocks is broken on macOS
+    # https://jira.percona.com/browse/PS-2285
+    args.concat %W[-DWITHOUT_ROCKSDB=1]
 
     # MySQL >5.7.x mandates Boost as a requirement to build & has a strict
     # version check in place to ensure it only builds against expected release.
