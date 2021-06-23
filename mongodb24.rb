@@ -5,11 +5,13 @@ class Mongodb24 < Formula
 
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    cellar :any_skip_relocation
     rebuild 1
-    sha256 "4e6dbc25e9cb2a82d1047b4cc96314a3afe1afc6fb2f4d5f464201661419d644" => :sierra
-    sha256 "e82a70cf9925692bc302f7e534c896f1b14d38e588ea75b455be73c6bdecd432" => :high_sierra
+    sha256 cellar: :any_skip_relocation, sierra:      "4e6dbc25e9cb2a82d1047b4cc96314a3afe1afc6fb2f4d5f464201661419d644"
+    sha256 cellar: :any_skip_relocation, high_sierra: "e82a70cf9925692bc302f7e534c896f1b14d38e588ea75b455be73c6bdecd432"
   end
+
+  depends_on "scons" => :build
+  depends_on "openssl" => :optional
 
   patch do
     url "https://github.com/mongodb/mongo/commit/be4bc7.diff"
@@ -20,9 +22,6 @@ class Mongodb24 < Formula
     url "https://raw.githubusercontent.com/sportngin/homebrew-homebrew/e191342/patches/mongo-2.4.12-pointer-comparison.patch"
     sha256 "42df26a8fd73db69b68b83300baa2a33722e2b87732714b06d4ef7bee68fa08e"
   end
-
-  depends_on "scons" => :build
-  depends_on "openssl" => :optional
 
   # When 2.6 is released this conditional can be removed.
   if MacOS.version < :mavericks
@@ -64,56 +63,58 @@ class Mongodb24 < Formula
     (var+"log/mongodb").mkpath
   end
 
-  def mongodb_conf; <<~EOS
-    # Store data in #{var}/mongodb instead of the default /data/db
-    dbpath = #{var}/mongodb
+  def mongodb_conf
+    <<~EOS
+      # Store data in #{var}/mongodb instead of the default /data/db
+      dbpath = #{var}/mongodb
 
-    # Append logs to #{var}/log/mongodb/mongo.log
-    logpath = #{var}/log/mongodb/mongo.log
-    logappend = true
+      # Append logs to #{var}/log/mongodb/mongo.log
+      logpath = #{var}/log/mongodb/mongo.log
+      logappend = true
 
-    # Only accept local connections
-    bind_ip = 127.0.0.1
+      # Only accept local connections
+      bind_ip = 127.0.0.1
     EOS
   end
 
-  plist_options :manual => "mongod --config #{HOMEBREW_PREFIX}/etc/mongod.conf"
+  plist_options manual: "mongod --config #{HOMEBREW_PREFIX}/etc/mongod.conf"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/mongod</string>
-        <string>--config</string>
-        <string>#{etc}/mongod.conf</string>
-      </array>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>KeepAlive</key>
-      <false/>
-      <key>WorkingDirectory</key>
-      <string>#{HOMEBREW_PREFIX}</string>
-      <key>StandardErrorPath</key>
-      <string>#{var}/log/mongodb/output.log</string>
-      <key>StandardOutPath</key>
-      <string>#{var}/log/mongodb/output.log</string>
-      <key>HardResourceLimits</key>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
       <dict>
-        <key>NumberOfFiles</key>
-        <integer>1024</integer>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/mongod</string>
+          <string>--config</string>
+          <string>#{etc}/mongod.conf</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>KeepAlive</key>
+        <false/>
+        <key>WorkingDirectory</key>
+        <string>#{HOMEBREW_PREFIX}</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/mongodb/output.log</string>
+        <key>StandardOutPath</key>
+        <string>#{var}/log/mongodb/output.log</string>
+        <key>HardResourceLimits</key>
+        <dict>
+          <key>NumberOfFiles</key>
+          <integer>1024</integer>
+        </dict>
+        <key>SoftResourceLimits</key>
+        <dict>
+          <key>NumberOfFiles</key>
+          <integer>1024</integer>
+        </dict>
       </dict>
-      <key>SoftResourceLimits</key>
-      <dict>
-        <key>NumberOfFiles</key>
-        <integer>1024</integer>
-      </dict>
-    </dict>
-    </plist>
+      </plist>
     EOS
   end
 
