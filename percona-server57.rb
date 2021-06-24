@@ -1,3 +1,6 @@
+# typed: false
+# frozen_string_literal: true
+
 # Fork of https://github.com/Homebrew/homebrew/blob/fe554ca165362b4dc697af9700058396da6385e0/Library/Formula/percona-server.rb
 class PerconaServer57 < Formula
   desc "Drop-in MySQL replacement"
@@ -5,13 +8,13 @@ class PerconaServer57 < Formula
   url "https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.18-14/source/tarball/percona-server-5.7.18-14.tar.gz"
   sha256 "4c617e2f9a1c601caebb5ff470c675e3d03ba3b8071cd3261ae24fe11671e3bd"
 
-  keg_only 'Keg only with versioned data directory to allow multiple versions on one system.  See: https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/'
-
   bottle do
     root_url "https://s3.amazonaws.com/sportngin-homebrew-bottles"
-    sha256 "d3c3af5b90b3c4dc4d6a97e0caa8e452f3bc05bb3245eccdd36378eebed59698" => :el_capitan
-    sha256 "51d228bbe6d205cd9b4d1110af297016290ef893b90b3bd044b8efaab7a1645c" => :sierra
+    sha256 el_capitan: "d3c3af5b90b3c4dc4d6a97e0caa8e452f3bc05bb3245eccdd36378eebed59698"
+    sha256 sierra:     "51d228bbe6d205cd9b4d1110af297016290ef893b90b3bd044b8efaab7a1645c"
   end
+
+  keg_only "keg only with versioned data directory to allow multiple versions on one system.  See: https://www.percona.com/blog/2014/08/26/mysqld_multi-how-to-run-multiple-instances-of-mysql/"
 
   option :universal
   option "with-test", "Build with unit tests"
@@ -65,7 +68,7 @@ class PerconaServer57 < Formula
     ]
 
     # PAM plugin is Linux-only at the moment
-    args.concat %W[
+    args.concat %w[
       -DWITHOUT_AUTH_PAM=1
       -DWITHOUT_AUTH_PAM_COMPAT=1
       -DWITHOUT_DIALOG=1
@@ -73,7 +76,7 @@ class PerconaServer57 < Formula
 
     # TokuDB is broken on MacOsX
     # https://bugs.launchpad.net/percona-server/+bug/1531446
-    args.concat %W[-DWITHOUT_TOKUDB=1]
+    args.concat %w[-DWITHOUT_TOKUDB=1]
 
     # MySQL >5.7.x mandates Boost as a requirement to build & has a strict
     # version check in place to ensure it only builds against expected release.
@@ -82,10 +85,10 @@ class PerconaServer57 < Formula
     args << "-DWITH_BOOST=#{buildpath}/boost_1_59_0"
 
     # To enable unit testing at build, we need to download the unit testing suite
-    if build.with? "test"
-      args << "-DENABLE_DOWNLOADS=ON"
+    args << if build.with? "test"
+      "-DENABLE_DOWNLOADS=ON"
     else
-      args << "-DWITH_UNIT_TESTS=OFF"
+      "-DWITH_UNIT_TESTS=OFF"
     end
 
     # Build the embedded server
@@ -109,7 +112,7 @@ class PerconaServer57 < Formula
 
     # Don't create databases inside of the prefix!
     # See: https://github.com/Homebrew/homebrew/issues/4975
-    rm_rf prefix+"data"
+    rm_rf "#{prefix}data"
 
     # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
@@ -119,43 +122,45 @@ class PerconaServer57 < Formula
     bin.install_symlink prefix/"support-files/mysql.server"
   end
 
-  def caveats; <<~EOS
-  A "/etc/my.cnf" from another install may interfere with a Homebrew-built
-  server starting up correctly.
+  def caveats
+    <<~EOS
+      A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+      server starting up correctly.
 
-  To connect:
-      mysql -uroot
+      To connect:
+          mysql -uroot
 
-  To initialize the data directory:
-      mysqld --initialize --datadir=#{datadir} --user=#{ENV["USER"]}
-  EOS
+      To initialize the data directory:
+          mysqld --initialize --datadir=#{datadir} --user=#{ENV["USER"]}
+    EOS
   end
 
-  def plist; <<~EOS
-  <?xml version="1.0" encoding="UTF-8"?>
-  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-  <plist version="1.0">
-  <dict>
-    <key>KeepAlive</key>
-    <true/>
-    <key>Label</key>
-    <string>#{plist_name}</string>
-    <key>ProgramArguments</key>
-    <array>
-      <string>#{opt_bin}/mysqld_safe</string>
-      <string>--user=#{ENV["USER"]}</string>
-      <string>--port=33306</string>
-      <string>--basedir=#{opt_prefix}</string>
-      <string>--datadir=#{datadir}</string>
-      <string>--pid-file=#{datadir}/mysqld57.pid</string>
-      <string>--socket=#{datadir}/mysqld57.sock</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-    <key>WorkingDirectory</key>
-    <string>#{var}</string>
-  </dict>
-  </plist>
-  EOS
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/mysqld_safe</string>
+          <string>--user=#{ENV["USER"]}</string>
+          <string>--port=33306</string>
+          <string>--basedir=#{opt_prefix}</string>
+          <string>--datadir=#{datadir}</string>
+          <string>--pid-file=#{datadir}/mysqld57.pid</string>
+          <string>--socket=#{datadir}/mysqld57.sock</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>#{var}</string>
+      </dict>
+      </plist>
+    EOS
   end
 end
