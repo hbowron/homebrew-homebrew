@@ -1,23 +1,22 @@
 class Elasticmq < Formula
   desc 'AWS SQS compatible message queue'
   homepage 'https://github.com/softwaremill/elasticmq'
-  url 'https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-0.14.6.jar', using: :nounzip
-  sha256 '1f42a90360ed430f4d46a2481eb4c9b9f849e1655426104c7ea73fc366bde2b2'
-
-  bottle :unneeded
+  url 'https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-1.3.3.jar', using: :nounzip
+  sha256 'cb5b90bc5306ea3f6844995194804fb2b70ab06ac0432e1be14f1f88ef7a3f35'
 
   depends_on "openjdk@8"
 
   def install
     jar_name = active_spec.downloader.basename
-    mkdir_p [libexec/"bin", libexec/"lib"]
+    mkdir_p [libexec/"bin", libexec/"lib", etc/"elasticmq"]
     cp cached_download, libexec/"lib/#{jar_name}"
     jar = libexec/"lib/#{jar_name}"
+    File.open(etc/"elasticmq/elasticmq.conf", 'w') {}
     File.open(libexec/"bin/elasticmq", 'w') do |f|
       f << <<~EOS
       #!/bin/bash
 
-      java $JAVA_OPTS -jar #{jar}
+      java $JAVA_OPTS -Dconfig.file=#{etc}/elasticmq/elasticmq.conf -jar #{jar}
       EOS
     end
     bin.install libexec/"bin/elasticmq"
